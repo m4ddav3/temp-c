@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
     s->c->c = (char*) malloc(255);
     s->c->d = (char*) malloc(255);
 
-    strncpy(s->c->c, "This is a string\0", 255);
-    printf("s->c->c length: %ld\n", sizeof(s->c->c));
+    strncpy(s->c->c, "This is a string!\0", 255);
+    printf("s->c->c length: %ld\n", strlen(s->c->c));
     s->c->c[254] = 0;
 
-    strncpy(s->c->d, "This is another string abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstUVWXyz\0", 255);
+    strncpy(s->c->d, "This is another string abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstU\0", 255);
     s->c->d[254] = 0;
 
     printf( "s is %ld bytes\n",      sizeof(*s)       );
@@ -50,11 +50,11 @@ int main(int argc, char *argv[]) {
 
     fwrite(s,    sizeof(struct foo), 1, f);
     fwrite(s->c, sizeof(struct bar), 1, f);
-    //fwrite(s->c->c, 255, 1, f);
-    //fwrite(s->c->d, 255, 1, f);
-    fputs(s->c->c, f);
+    fwrite(s->c->c, 255, 1, f);
+    fwrite(s->c->d, 255, 1, f);
+    //fputs(s->c->c, f);
     //fputc(0, f);
-    fputs(s->c->d, f);
+    //fputs(s->c->d, f);
     //fputc(0, f);
 
     fflush(f);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     printf("%d : fread struct bar\n", ftell(infh));
     printf("s->c->a = %d\n", s->c->a);
     printf("s->c->b = %d\n", s->c->b);
-
+/*
     s->c->c = (char*) malloc(255);
     fread(s->c->c, 255, 1, infh);
     printf("%d : fread s->c->c\n", ftell(infh));
@@ -85,17 +85,24 @@ int main(int argc, char *argv[]) {
     s->c->d = (char*) malloc(255);
     fread(s->c->d, 255, 1, infh);
     printf("%d : fread s->c->d\n", ftell(infh));
-/*
+*/
     printf("s->c->c = %s\n", s->c->c);
     s->c->c = (char*) malloc(255);
     printf("s->c->c = %s\n", s->c->c);
+
+    int pos = ftell(infh);
+
     fgets(s->c->c, 255, infh);
+    fgetc(infh);
+    printf("read %d bytes\n", ftell(infh) - pos);
+    pos = ftell(infh);
     printf("%d : fgets s->c->c\n", ftell(infh));
 
     s->c->d = (char*) malloc(255);
     fgets(s->c->d, 255, infh);
+    printf("read %d bytes\n", ftell(infh) - pos);
     printf("%d : fgets s->c->d\n", ftell(infh));
-*/
+
     printf("s->c->b = %d\n", s->c->b);
     printf("s->c->c = %s\n", s->c->c);
     printf("s->c->d = %s\n", s->c->d);
