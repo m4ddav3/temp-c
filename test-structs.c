@@ -69,12 +69,12 @@ int main(int argc, char *argv[]) {
     printf("Opened infh\n");
 
     fread(s, sizeof(struct foo), 1, infh);
-    printf("%d : fread struct foo\n", ftell(infh));
+    printf("%ld : fread struct foo\n", ftell(infh));
     printf("s->a = %d\n", s->a);
     printf("s->b = %d\n", s->b);
 
     fread(s->c, sizeof(struct bar), 1, infh);
-    printf("%d : fread struct bar\n", ftell(infh));
+    printf("%ld : fread struct bar\n", ftell(infh));
     printf("s->c->a = %d\n", s->c->a);
     printf("s->c->b = %d\n", s->c->b);
 /*
@@ -90,18 +90,18 @@ int main(int argc, char *argv[]) {
     s->c->c = (char*) malloc(255);
     printf("s->c->c = %s\n", s->c->c);
 
-    int pos = ftell(infh);
+    unsigned long pos = ftell(infh);
 
     fgets(s->c->c, 255, infh);
     fgetc(infh);
-    printf("read %d bytes\n", ftell(infh) - pos);
+    printf("read %ld bytes\n", ftell(infh) - pos);
     pos = ftell(infh);
-    printf("%d : fgets s->c->c\n", ftell(infh));
+    printf("%ld : fgets s->c->c\n", ftell(infh));
 
     s->c->d = (char*) malloc(255);
     fgets(s->c->d, 255, infh);
-    printf("read %d bytes\n", ftell(infh) - pos);
-    printf("%d : fgets s->c->d\n", ftell(infh));
+    printf("read %ld bytes\n", ftell(infh) - pos);
+    printf("%ld : fgets s->c->d\n", ftell(infh));
 
     printf("s->c->b = %d\n", s->c->b);
     printf("s->c->c = %s\n", s->c->c);
